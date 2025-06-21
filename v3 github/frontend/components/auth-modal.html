@@ -1,0 +1,508 @@
+<!-- Modal Đăng nhập/Đăng ký -->
+<div class="auth-modal-overlay" id="authModal" style="display:none;">
+  <div class="auth-modal-content">
+    <button class="auth-modal-close" id="authModalClose" title="Đóng">&times;</button>
+    
+    <!-- Tab Navigation -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Đăng nhập</button>
+      <button class="auth-tab" id="registerTab" onclick="switchAuthTab('register')">Đăng ký</button>
+    </div>
+
+    <!-- Login Form -->
+    <div class="auth-form" id="loginForm">
+      <h2>Đăng nhập</h2>
+      <form id="loginFormSubmit">
+        <div class="form-group">
+          <label for="loginUsername">Tên đăng nhập hoặc Email:</label>
+          <input type="text" id="loginUsername" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Mật khẩu:</label>
+          <input type="password" id="loginPassword" name="password" required>
+        </div>
+        <button type="submit" class="auth-btn">Đăng nhập</button>
+      </form>
+    </div>
+
+    <!-- Register Form -->
+    <div class="auth-form" id="registerForm" style="display:none;">
+      <h2>Đăng ký tài khoản</h2>
+      <form id="registerFormSubmit">
+        <div class="form-group">
+          <label for="registerUsername">Tên đăng nhập:</label>
+          <input type="text" id="registerUsername" name="username" required minlength="3" maxlength="50">
+          <small>3-50 ký tự, chỉ gồm chữ, số và dấu gạch dưới</small>
+        </div>
+        <div class="form-group">
+          <label for="registerEmail">Email:</label>
+          <input type="email" id="registerEmail" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="registerDisplayName">Tên hiển thị:</label>
+          <input type="text" id="registerDisplayName" name="display_name" required minlength="2" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="registerPassword">Mật khẩu:</label>
+          <input type="password" id="registerPassword" name="password" required minlength="6">
+          <small>Ít nhất 6 ký tự</small>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Xác nhận mật khẩu:</label>
+          <input type="password" id="confirmPassword" name="confirm_password" required>
+        </div>
+        
+        <!-- Avatar Selection -->
+        <div class="form-group">
+          <label>Chọn avatar:</label>
+          <div class="avatar-selection" id="avatarSelection">
+            <!-- Avatars will be loaded here -->
+          </div>
+          <input type="hidden" id="selectedAvatar" name="avatar_icon" value="user">
+        </div>
+        
+        <button type="submit" class="auth-btn">Đăng ký</button>
+      </form>
+    </div>
+
+    <!-- Loading -->
+    <div class="auth-loading" id="authLoading" style="display:none;">
+      <div class="spinner"></div>
+      <p>Đang xử lý...</p>
+    </div>
+
+    <!-- Messages -->
+    <div class="auth-message" id="authMessage" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- User Menu (khi đã đăng nhập) -->
+<div class="user-menu-dropdown" id="userMenuDropdown" style="display:none;">
+  <div class="user-info">
+    <span class="user-avatar" id="userAvatar">👤</span>
+    <div class="user-details">
+      <div class="user-name" id="userName">Người dùng</div>
+      <div class="user-badge" id="userBadge" style="display:none;"></div>
+    </div>
+  </div>
+  <div class="menu-items">
+    <button onclick="openProfileModal()" class="menu-item">
+      <span>📝</span> Chỉnh sửa profile
+    </button>
+    <button onclick="logout()" class="menu-item">
+      <span>🚪</span> Đăng xuất
+    </button>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div class="profile-modal-overlay" id="profileModal" style="display:none;">
+  <div class="profile-modal-content">
+    <button class="profile-modal-close" id="profileModalClose" title="Đóng">&times;</button>
+    
+    <h2>Chỉnh sửa Profile</h2>
+    <form id="profileFormSubmit">
+      <div class="form-group">
+        <label for="profileDisplayName">Tên hiển thị:</label>
+        <input type="text" id="profileDisplayName" name="display_name" required minlength="2" maxlength="100">
+      </div>
+      
+      <!-- Avatar Selection -->
+      <div class="form-group">
+        <label>Chọn avatar:</label>
+        <div class="avatar-selection" id="profileAvatarSelection">
+          <!-- Avatars will be loaded here -->
+        </div>
+        <input type="hidden" id="profileSelectedAvatar" name="avatar_icon" value="user">
+      </div>
+      
+      <div class="form-group">
+        <label for="profileBio">Giới thiệu bản thân:</label>
+        <textarea id="profileBio" name="profile_bio" rows="3" maxlength="500" placeholder="Viết vài dòng về bản thân..."></textarea>
+        <small>Tối đa 500 ký tự</small>
+      </div>
+      
+      <button type="submit" class="auth-btn">Cập nhật</button>
+    </form>
+    
+    <div class="profile-message" id="profileMessage" style="display:none;"></div>
+  </div>
+</div>
+
+<style>
+/* Auth Modal Styles */
+.auth-modal-overlay {
+  position: fixed;
+  z-index: 10000;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(17, 30, 60, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s;
+}
+
+.auth-modal-content {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 10px 50px rgba(25,118,210,0.2);
+  max-width: 450px;
+  width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.auth-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.5em;
+  background: none;
+  color: #999;
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.auth-modal-close:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f5f7fa;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.auth-tab.active {
+  background: #1976d2;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(25,118,210,0.3);
+}
+
+.auth-form h2 {
+  color: #1976d2;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.4em;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e3f2fd;
+  border-radius: 10px;
+  font-size: 0.95em;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 4px;
+  color: #666;
+  font-size: 0.8em;
+}
+
+.avatar-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+  gap: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 2px solid #e3f2fd;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.avatar-option {
+  width: 45px;
+  height: 45px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5em;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+  border-color: #90caf9;
+}
+
+.avatar-option.selected {
+  border-color: #1976d2;
+  background: #e3f2fd;
+  transform: scale(1.1);
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25,118,210,0.3);
+}
+
+.auth-btn:active {
+  transform: translateY(0);
+}
+
+.auth-loading {
+  text-align: center;
+  padding: 30px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e3f2fd;
+  border-top: 4px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.auth-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.auth-message.success {
+  background: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.auth-message.error {
+  background: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+
+/* User Menu Styles */
+.user-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  min-width: 220px;
+  z-index: 1000;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.user-info {
+  padding: 15px;
+  background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1976d2;
+  font-size: 0.95em;
+}
+
+.user-badge {
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7em;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 2px;
+  display: inline-block;
+}
+
+.menu-items {
+  padding: 8px 0;
+}
+
+.menu-item {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.menu-item:hover {
+  background: #f5f5f5;
+}
+
+/* Profile Modal - tương tự auth modal */
+.profile-modal-overlay {
+  position: fixed;
+  z-index: 10000;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(17, 30, 60, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s;
+}
+
+.profile-modal-content {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 10px 50px rgba(25,118,210,0.2);
+  max-width: 450px;
+  width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.profile-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.5em;
+  background: none;
+  color: #999;
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.profile-modal-close:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.profile-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.profile-message.success {
+  background: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.profile-message.error {
+  background: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .auth-modal-content, .profile-modal-content {
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  .avatar-selection {
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  }
+  
+  .avatar-option {
+    width: 40px;
+    height: 40px;
+    font-size: 1.3em;
+  }
+}
+</style>

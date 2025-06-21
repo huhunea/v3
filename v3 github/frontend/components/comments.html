@@ -1,0 +1,665 @@
+<!-- Comments Section Component -->
+<div class="comments-section" id="commentsSection" style="display:none;">
+  <!-- Section Reactions -->
+  <div class="section-reactions">
+    <h3>Cảm xúc về phần này</h3>
+    <div class="reaction-buttons" id="sectionReactionButtons">
+      <button class="reaction-btn" data-reaction="like" title="Thích">
+        <span class="reaction-emoji">👍</span>
+        <span class="reaction-count">0</span>
+      </button>
+      <button class="reaction-btn" data-reaction="love" title="Yêu thích">
+        <span class="reaction-emoji">❤️</span>
+        <span class="reaction-count">0</span>
+      </button>
+      <button class="reaction-btn" data-reaction="haha" title="Haha">
+        <span class="reaction-emoji">😂</span>
+        <span class="reaction-count">0</span>
+      </button>
+      <button class="reaction-btn" data-reaction="wow" title="Wow">
+        <span class="reaction-emoji">😮</span>
+        <span class="reaction-count">0</span>
+      </button>
+      <button class="reaction-btn" data-reaction="sad" title="Buồn">
+        <span class="reaction-emoji">😢</span>
+        <span class="reaction-count">0</span>
+      </button>
+      <button class="reaction-btn" data-reaction="angry" title="Tức giận">
+        <span class="reaction-emoji">😡</span>
+        <span class="reaction-count">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Comments Header -->
+  <div class="comments-header">
+    <h3>
+      <span class="comments-icon">💬</span>
+      Bình luận (<span id="commentsCount">0</span>)
+    </h3>
+    <div class="comments-stats" id="commentsStats">
+      <span class="stat-item">
+        <span class="stat-emoji">👥</span>
+        <span id="uniqueCommenters">0</span> người tham gia
+      </span>
+    </div>
+  </div>
+
+  <!-- Add Comment Form -->
+  <div class="add-comment" id="addCommentForm">
+    <div class="login-prompt" id="loginPrompt">
+      <p>Bạn cần đăng nhập để bình luận</p>
+      <button class="auth-btn" onclick="showAuthModal('login')">Đăng nhập</button>
+    </div>
+    
+    <div class="comment-form" id="commentForm" style="display:none;">
+      <div class="user-avatar-input">
+        <span class="comment-user-avatar" id="commentUserAvatar">👤</span>
+        <div class="comment-input-wrapper">
+          <textarea 
+            id="commentInput" 
+            placeholder="Viết bình luận..." 
+            rows="3"
+            maxlength="2000"
+          ></textarea>
+          <div class="comment-actions">
+            <span class="char-counter" id="charCounter">0/2000</span>
+            <button class="submit-comment-btn" id="submitCommentBtn" disabled>
+              Gửi bình luận
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comments List -->
+  <div class="comments-list" id="commentsList">
+    <!-- Comments will be loaded here -->
+  </div>
+
+  <!-- Load More -->
+  <div class="load-more" id="loadMoreComments" style="display:none;">
+    <button class="load-more-btn" onclick="loadMoreComments()">
+      Xem thêm bình luận
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="comments-loading" id="commentsLoading" style="display:none;">
+    <div class="spinner-small"></div>
+    <span>Đang tải bình luận...</span>
+  </div>
+</div>
+
+<!-- Comment Item Template -->
+<template id="commentTemplate">
+  <div class="comment-item" data-comment-id="">
+    <div class="comment-avatar">
+      <span class="comment-user-emoji">👤</span>
+    </div>
+    <div class="comment-content">
+      <div class="comment-header">
+        <span class="comment-author"></span>
+        <span class="comment-badge"></span>
+        <span class="comment-time"></span>
+        <span class="comment-edited" style="display:none;">(đã chỉnh sửa)</span>
+      </div>
+      <div class="comment-text"></div>
+      <div class="comment-actions">
+        <div class="comment-reactions">
+          <button class="comment-reaction-btn" data-reaction="like">
+            <span class="reaction-emoji">👍</span>
+            <span class="reaction-count">0</span>
+          </button>
+          <button class="comment-reaction-btn" data-reaction="love">
+            <span class="reaction-emoji">❤️</span>
+            <span class="reaction-count">0</span>
+          </button>
+          <button class="comment-reaction-btn" data-reaction="haha">
+            <span class="reaction-emoji">😂</span>
+            <span class="reaction-count">0</span>
+          </button>
+        </div>
+        <div class="comment-controls">
+          <button class="comment-control-btn reply-btn">Trả lời</button>
+          <button class="comment-control-btn edit-btn" style="display:none;">Sửa</button>
+          <button class="comment-control-btn delete-btn" style="display:none;">Xóa</button>
+        </div>
+      </div>
+      
+      <!-- Reply Form -->
+      <div class="reply-form" style="display:none;">
+        <div class="comment-input-wrapper">
+          <textarea 
+            class="reply-input" 
+            placeholder="Viết trả lời..." 
+            rows="2"
+            maxlength="2000"
+          ></textarea>
+          <div class="comment-actions">
+            <span class="char-counter-reply">0/2000</span>
+            <button class="submit-reply-btn">Gửi</button>
+            <button class="cancel-reply-btn">Hủy</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Edit Form -->
+      <div class="edit-form" style="display:none;">
+        <div class="comment-input-wrapper">
+          <textarea 
+            class="edit-input" 
+            rows="3"
+            maxlength="2000"
+          ></textarea>
+          <div class="comment-actions">
+            <span class="char-counter-edit">0/2000</span>
+            <button class="submit-edit-btn">Lưu</button>
+            <button class="cancel-edit-btn">Hủy</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Replies -->
+      <div class="replies" style="display:none;">
+        <!-- Replies will be inserted here -->
+      </div>
+    </div>
+  </div>
+</template>
+
+<style>
+/* Comments Section Styles */
+.comments-section {
+  background: #fff;
+  border-radius: 20px;
+  padding: 25px;
+  margin-top: 20px;
+  box-shadow: 0 6px 36px rgba(25,118,210,0.09), 0 1.5px 7px rgba(25,118,210,0.04);
+}
+
+/* Section Reactions */
+.section-reactions {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+  border-radius: 15px;
+  border: 1px solid #e3f2fd;
+}
+
+.section-reactions h3 {
+  color: #1976d2;
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reaction-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 2px solid #e3e3e3;
+  border-radius: 25px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9em;
+  min-width: 50px;
+}
+
+.reaction-btn:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+  transform: scale(1.05);
+}
+
+.reaction-btn.active {
+  background: #e3f2fd;
+  border-color: #1976d2;
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.reaction-emoji {
+  font-size: 1.2em;
+}
+
+.reaction-count {
+  font-weight: 500;
+  min-width: 12px;
+}
+
+/* Comments Header */
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.comments-header h3 {
+  color: #1976d2;
+  font-size: 1.2em;
+  font-weight: 700;
+  margin: 0;
+}
+
+.comments-icon {
+  font-size: 1.1em;
+}
+
+.comments-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-emoji {
+  font-size: 1em;
+}
+
+/* Add Comment Form */
+.add-comment {
+  margin-bottom: 25px;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px dashed #ddd;
+}
+
+.login-prompt p {
+  margin-bottom: 15px;
+  color: #666;
+  font-weight: 500;
+}
+
+.comment-form {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.user-avatar-input {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.comment-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.comment-input-wrapper {
+  flex: 1;
+}
+
+#commentInput, .reply-input, .edit-input {
+  width: 100%;
+  border: 2px solid #e3e3e3;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 0.95em;
+  resize: vertical;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+#commentInput:focus, .reply-input:focus, .edit-input:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.char-counter, .char-counter-reply, .char-counter-edit {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.submit-comment-btn, .submit-reply-btn, .submit-edit-btn {
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9em;
+}
+
+.submit-comment-btn:hover, .submit-reply-btn:hover, .submit-edit-btn:hover {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  transform: translateY(-1px);
+}
+
+.submit-comment-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancel-reply-btn, .cancel-edit-btn {
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.cancel-reply-btn:hover, .cancel-edit-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Comments List */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 12px;
+  padding: 15px;
+  background: #fafafa;
+  border-radius: 12px;
+  border-left: 4px solid #e3f2fd;
+  transition: all 0.2s;
+}
+
+.comment-item:hover {
+  background: #f5f5f5;
+  border-left-color: #1976d2;
+}
+
+.comment-avatar {
+  flex-shrink: 0;
+}
+
+.comment-user-emoji {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.comment-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #1976d2;
+  font-size: 0.95em;
+}
+
+.comment-badge {
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.comment-time {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.comment-edited {
+  color: #999;
+  font-size: 0.75em;
+  font-style: italic;
+}
+
+.comment-text {
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  word-wrap: break-word;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.comment-reactions {
+  display: flex;
+  gap: 8px;
+}
+
+.comment-reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid #e3e3e3;
+  border-radius: 20px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.8em;
+}
+
+.comment-reaction-btn:hover {
+  background: #f5f5f5;
+  transform: scale(1.05);
+}
+
+.comment-reaction-btn.active {
+  background: #e3f2fd;
+  border-color: #1976d2;
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.comment-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.comment-control-btn {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.8em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.comment-control-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.delete-btn:hover {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+/* Reply and Edit Forms */
+.reply-form, .edit-form {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e3e3e3;
+}
+
+/* Replies */
+.replies {
+  margin-top: 15px;
+  padding-left: 20px;
+  border-left: 2px solid #e3f2fd;
+}
+
+.replies .comment-item {
+  background: #fff;
+  border-left: 2px solid #bbdefb;
+  margin-bottom: 12px;
+}
+
+.replies .comment-user-emoji {
+  width: 35px;
+  height: 35px;
+  font-size: 1.1em;
+}
+
+/* Load More */
+.load-more {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.load-more-btn {
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.load-more-btn:hover {
+  background: linear-gradient(135deg, #e0e0e0, #d5d5d5);
+  color: #333;
+}
+
+/* Loading */
+.comments-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: #666;
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e3e3e3;
+  border-top: 2px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .comments-section {
+    padding: 15px;
+    margin-top: 15px;
+  }
+  
+  .comments-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .comment-item {
+    padding: 12px;
+  }
+  
+  .user-avatar-input {
+    gap: 8px;
+  }
+  
+  .comment-user-avatar, .comment-user-emoji {
+    width: 35px;
+    height: 35px;
+    font-size: 1.1em;
+  }
+  
+  .reaction-buttons {
+    gap: 6px;
+  }
+  
+  .reaction-btn {
+    padding: 6px 10px;
+    font-size: 0.8em;
+  }
+  
+  .comment-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .comment-reactions {
+    gap: 6px;
+  }
+  
+  .comment-reaction-btn {
+    font-size: 0.75em;
+    padding: 3px 6px;
+  }
+}
+</style>

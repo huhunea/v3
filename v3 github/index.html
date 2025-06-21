@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>@KHOAHOCGIASIURE - Phiên bản 2.0 với Tài khoản & Bình luận</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand:500,700|Montserrat:700|Inter:600,700&display=swap">
+  <style>
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: #f7f9fb;
+      color: #222;
+      font-family: 'Quicksand', 'Montserrat', 'Inter', sans-serif;
+      font-size: 16px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background: linear-gradient(120deg, #e3f2fd 0%, #fffde7 100%);
+    }
+    .ads-modal-overlay {
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(17, 30, 60, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.4s;
+    }
+    .ads-modal-content {
+      background: none;
+      border-radius: 25px;
+      padding: 0;
+      position: relative;
+      box-shadow: 0 8px 64px rgba(25,118,210,0.13), 0 1.5px 7px rgba(25,118,210,0.04);
+      max-width: 900px;
+      width: 90vw;
+      max-height: 92vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: adsZoomIn 0.5s;
+    }
+    .ads-modal-content img {
+      width: 100%;
+      height: auto;
+      max-width: 900px;
+      max-height: 92vh;
+      border-radius: 25px;
+      display: block;
+    }
+    .ads-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 22px;
+      font-size: 2.1em;
+      background: rgba(255,255,255,0.86);
+      color: #e53935;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 10px #bdbdbd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: background 0.13s;
+    }
+    .ads-modal-close:hover {
+      background: #fff0f0;
+      color: #b71c1c;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0 }
+      to   { opacity: 1 }
+    }
+    @keyframes adsZoomIn {
+      from { transform: scale(0.93); opacity: 0.5; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e3e3e3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+      position: relative;
+      padding: 0 32px 0 0;
+      z-index: 3;
+      margin-bottom: 10px;
+    }
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+      padding-left: 20px;
+    }
+    .header-title {
+      font-size: 1.22rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #1976d2;
+      text-shadow: 0 1px 7px rgba(25,118,210,0.07);
+      line-height: 1.1;
+      margin-left: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+      display: inline-block;
+    }
+
+    /* User Menu Styles */
+    .header-user-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9em;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(135deg, #1565c0, #1976d2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(25,118,210,0.3);
+    }
+
+    .user-menu-btn {
+      display: none;
+      background: #fff;
+      border: 2px solid #e3f2fd;
+      border-radius: 12px;
+      padding: 8px 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: #1976d2;
+      position: relative;
+    }
+
+    .user-menu-btn:hover {
+      background: #f8f9fa;
+      border-color: #90caf9;
+    }
+
+    .user-menu-btn .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e3f2fd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9em;
+    }
+
+    .user-menu-btn .user-name {
+      font-size: 0.9em;
+      max-width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-menu-btn .user-badge {
+      font-size: 0.6em;
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
+    .header-countdown-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-left: auto;
+      margin-right: 15px;
+      min-width: 0;
+      user-select: none;
+    }
+    .countdown-label-box {
+      background: linear-gradient(90deg, #ffc107 100%, #ffd54f 100%);
+      color: #fff;
+      border-radius: 13px;
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 10px 17px 10px 17px;
+      text-align: center;
+      min-width: 52px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 8px #ffe082;
+      margin-right: 5px;
+      border: none;
+      letter-spacing: 0.5px;
+      transition: box-shadow 0.14s;
+    }
+    .countdown-label-box > div {
+      width: 100%;
+      font-weight: bold;
+      font-size: 1.02rem;
+      line-height: 1.15;
+      letter-spacing: 0.5px;
+    }
+    .countdown-main-box {
+      display: flex;
+      align-items: center;
+      background: #fffde7;
+      border-radius: 12px;
+      box-shadow: 0 2px 13px rgba(255,193,7,0.13);
+      padding: 0 7px 0 0;
+      height: 44px;
+    }
+    .countdown-block {
+      background: #fff;
+      color: #e65100;
+      border-radius: 10px;
+      padding: 4px 13px 3px 13px;
+      min-width: 36px;
+      margin: 0 7px 0 0;
+      text-align: center;
+      font-size: 1.08rem;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: inherit;
+      box-shadow: 0 1px 6px #ffecb3;
+      border: 2px solid #ffe082;
+      transition: background 0.13s, color 0.13s;
+    }
+    .countdown-block:last-child {margin-right:0;}
+    .countdown-unit {
+      color: #b26a00;
+      font-size: 0.91rem;
+      font-weight: 700;
+      margin-top: 0.5px;
+      display: block;
+      letter-spacing: .2px;
+    }
+    @media (max-width:900px) {
+      .header-countdown-wrap {flex-shrink:1;}
+      .countdown-label-box {padding:5px 8px;height:30px;font-size:0.91rem;min-width:32px;}
+      .countdown-main-box {height:30px;}
+      .countdown-block{font-size:0.82rem;min-width:18px;padding:3px 7px 1.5px 7px;}
+      .countdown-unit{font-size:0.68rem;}
+      .header-title{font-size:0.8rem;}
+      header{height:54px;}
+      .login-btn, .user-menu-btn {
+        padding: 6px 12px;
+        font-size: 0.8em;
+      }
+      .user-menu-btn .user-name {
+        max-width: 60px;
+      }
+    }
+    .container {
+      max-width: 1050px;
+      margin: 42px auto 0;
+      background: transparent;
+      padding: 0 20px 50px 20px;
+    }
+    .card-box {
+      background: #fff;
+      box-shadow: 0 6px 36px rgba(25,118,210,0.09), 0 1.5px 7px rgba(25,118,210,0.04);
+      border-radius: 22px;
+      padding: 32px 28px 28px 28px;
+      margin-bottom: 34px;
+      position: relative;
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      font-size: 1.29em;
+      font-weight: 900;
+      color: #e65100;
+      margin-bottom: 18px;
+      gap: 10px;
+      letter-spacing: .3px;
+    }
+    .section-title .icon {
+      font-size: 1.55em;
+      margin-right: 4px;
+    }
+    .sheet-btn {
+      display: inline-block;
+      margin-top: 9px;
+      background: #ffb300;
+      color: #fff;
+      font-size: 1.13rem;
+      font-weight: 700;
+      padding: 13px 30px;
+      border-radius: 16px;
+      border: none;
+      box-shadow: 0 2px 12px #ffe082;
+      cursor: pointer;
+      transition: background 0.13s;
+      margin-bottom: 10px;
+      text-align: center;
+      letter-spacing: 0.2px;
+    }
+    .sheet-btn:hover { background: #ff8f00; }
+    .sheet-wrap {
+      margin-top: 14px;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 18px #bbdefb;
+      background: #fff;
+      display: none;
+    }
+    .card-box#khoahocBox,
+    .card-box#tonghopBox {
+      font-family: 'Montserrat', 'Inter', 'Quicksand', sans-serif;
+      background: #fcfcfc;
+      border: 1.5px solid #e3f2fd;
+    }
+    .card-box#khoahocBox .section-title,
+    .card-box#tonghopBox .section-title {
+      font-family: 'Montserrat', 'Inter', 'Quicksand', sans-serif;
+      font-size: 1.45em;
+      letter-spacing: 1px;
+      color: #1565c0;
+    }
+    .class-tabs, .subject-tabs, .resource-tabs {
+      font-family: 'Montserrat', 'Inter', 'Quicksand', sans-serif;
+      font-weight: 700;
+      display: flex;
+      gap: 9px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .class-tab, .subject-tab, .resource-tab {
+      border-radius: 14px;
+      font-family: 'Montserrat', 'Inter', 'Quicksand', sans-serif;
+      box-shadow: 0 1.5px 7px #b3e5fc;
+      font-weight: 700;
+      font-size: 1.04em;
+      letter-spacing: 0.4px;
+      padding: 10px 26px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.14s, color 0.14s, box-shadow 0.14s;
+    }
+    .class-tab.active, .subject-tab.active, .resource-tab.active {
+      background: linear-gradient(92deg, #42a5f5 40%, #1565c0 100%);
+      color: #fff;
+      box-shadow: 0 2px 12px #90caf9;
+    }
+    .class-tab:not(.active):hover, .subject-tab:not(.active):hover, .resource-tab:not(.active):hover {
+      background: #e3f2fd;
+      color: #1976d2;
+      box-shadow: 0 0 0 #fff;
+    }
+    #showKhoaHocSheetBtn, #showTongHopBtn {
+      font-family: 'Montserrat', 'Inter', 'Quicksand', sans-serif;
+      font-size: 1.11rem;
+      font-weight: 700;
+      padding: 13px 32px;
+      border-radius: 15px;
+      box-shadow: 0 2px 12px #bbe1fa;
+      background: linear-gradient(95deg, #1976d2 40%, #64b5f6 100%);
+      color: #fff;
+      margin-top: 17px;
+      margin-bottom: 12px;
+      letter-spacing: 0.16px;
+      border: none;
+      transition: background 0.14s;
+    }
+    #showKhoaHocSheetBtn:hover, #showTongHopBtn:hover {
+      background: linear-gradient(92deg, #1565c0 60%, #1976d2 100%);
+      color: #fff;
+    }
+    .sheet-message {
+      font-family: 'Montserrat', 'Inter', 'Quicksand', sans-serif;
+      color: #d84315;
+      background: #fff3e0;
+      border-radius: 12px;
+      padding: 21px 19px 18px 19px;
+      font-size: 1.13em;
+      font-weight: 700;
+      margin: 17px 0 0 0;
+      box-shadow: 0 2px 12px #ffe08236;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .promo {
+      margin: 0 auto 26px auto;
+      background: #fff;
+      border: none;
+      border-radius: 15px;
+      padding: 26px 34px 20px 34px;
+      font-size: 1.13rem;
+      line-height: 1.7;
+      color: #222;
+      font-weight: 500;
+      box-shadow: 0 5px 36px rgba(25,118,210,0.07), 0 1.5px 7px rgba(25,118,210,0.04);
+    }
+    .ibzalo {
+      background: #e3f2fd;
+      color: #1976d2;
+      border-radius: 8px;
+      padding: 2.5px 12px 2.5px 12px;
+      font-weight: 800;
+      font-size: 1.03em;
+      margin: 0 3px;
+      cursor: pointer;
+      transition: background 0.14s, color 0.14s;
+      border: 1px solid #90caf9;
+      display: inline-block;
+    }
+    .ibzalo:hover {
+      background: #1976d2;
+      color: #fff;
+      border: 1px solid #1565c0;
+    }
+    .zalo-fab {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 100;
+      width: 66px;
+      height: 66px;
+      background: #008EE6;
+      border-radius: 50%;
+      box-shadow: 0 5px 24px rgba(0, 142, 230, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 5px solid #fff;
+      transition: box-shadow 0.17s;
+      font-size: 17px;
+      font-weight: bold;
+      color: #fff;
+      letter-spacing: 0.5px;
+      text-align: center;
+      line-height: 1.1;
+      padding: 0;
+      user-select: none;
+      flex-direction: column;
+    }
+    .zalo-fab .fab-label {
+      font-size: 1.13em;
+      font-weight: 700;
+      display: block;
+      color: #fff;
+      letter-spacing: 0.2px;
+    }
+    .zalo-fab:hover { box-shadow: 0 8px 32px #90caf9; background: #1565c0; }
+    @media (max-width:600px) {
+      .zalo-fab {width:44px;height:44px;bottom:10px;right:8px;font-size:12px;}
+      .zalo-fab .fab-label {font-size:1em;}
+    }
+    .zalo-chat-balloon {
+      display: none;
+      position: fixed;
+      bottom: 88px;
+      right: 28px;
+      z-index: 110;
+      background: #fff;
+      color: #1976d2;
+      font-weight: 700;
+      font-size: 1.09rem;
+      padding: 13px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 22px rgba(25,118,210,0.13);
+      border: 2px solid #e3f2fd;
+      min-width: 100px;
+      max-width: 90vw;
+      animation: chatBalloonShow 0.35s;
+      text-align: center;
+    }
+    @keyframes chatBalloonShow {
+      0% {transform:translateY(20px); opacity:0}
+      100% {transform:translateY(0); opacity:1}
+    }
+    footer {
+      background: transparent;
+      margin-top: 50px;
+      padding: 0 0 32px 0;
+      color: #1959a0;
+      font-size: 1.11rem;
+      letter-spacing: .3px;
+      text-align: center;
+      font-weight: 600;
+      border-radius: 31px 31px 0 0 / 19px 19px 0 0;
+      position: relative;
+      overflow: hidden;
+      border-top: none;
+      box-shadow: none;
+      width: 100vw;
+    }
+    .footer-inner {
+      display: inline-block;
+      background: #fff;
+      padding: 17px 30px 14px 30px;
+      border-radius: 18px;
+      box-shadow: 0 6px 32px rgba(25,118,210,0.10), 0 1.5px 7px rgba(25,118,210,0.04);
+      font-size: 1.07rem;
+      margin-top: 32px;
+      text-align: center;
+      min-width: 260px;
+    }
+    .footer-link {
+      color: #1976d2;
+      font-weight: 700;
+      text-decoration: underline;
+      margin: 0 6px;
+      transition: color 0.14s;
+    }
+    .footer-link:hover { color: #d84315;}
+    .footer-copyright {
+      display: block;
+      margin-top: 7px;
+      color: #888;
+      font-weight: 400;
+      font-size: 1em;
+      letter-spacing: 0.15px;
+    }
+    .footer-author {
+      color: #1976d2;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    @media (max-width: 700px) {
+      .footer-inner {
+        padding: 12px 7vw 12px 7vw;
+        font-size: 1em;
+        border-radius: 12px;
+        min-width: unset;
+      }
+      footer {
+        font-size: 0.98rem;
+        padding-bottom: 20px;
+      }
+    }
+
+    /* Comments toggle button */
+    .comments-toggle {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      color: #1976d2;
+      border: 2px solid #90caf9;
+      border-radius: 12px;
+      padding: 8px 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comments-toggle:hover {
+      background: linear-gradient(135deg, #90caf9, #64b5f6);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(25,118,210,0.3);
+    }
+
+    .comments-toggle.active {
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      color: #fff;
+      border-color: #1565c0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ads Modal -->
+  <div class="ads-modal-overlay" id="adsModal" style="display:none;">
+    <div class="ads-modal-content">
+      <img src="ads.png" alt="Quảng cáo" id="adsImage" />
+      <button class="ads-modal-close" id="adsModalClose" title="Đóng">&times;</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-left-group">
+      <div class="header-title">version 2.0</div>
+    </div>
+    <div class="header-countdown-wrap">
+      <div class="countdown-label-box">
+        <div>THPT<br>QG</div>
+      </div>
+      <div class="countdown-main-box">
+        <div class="countdown-block">
+          <span id="countdown-day">00</span>
+          <span class="countdown-unit">Ngày</span>
+        </div>
+        <div class="countdown-block">
+          <span id="countdown-hour">00</span>
+          <span class="countdown-unit">Giờ</span>
+        </div>
+        <div class="countdown-block">
+          <span id="countdown-minute">00</span>
+          <span class="countdown-unit">Phút</span>
+        </div>
+        <div class="countdown-block">
+          <span id="countdown-second">00</span>
+          <span class="countdown-unit">Giây</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- User Section -->
+    <div class="header-user-section">
+      <button class="login-btn" id="loginBtn" onclick="showAuthModal('login')">
+        👤 Đăng nhập
+      </button>
+      <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserMenu()" style="display:none;">
+        <span class="user-avatar">👤</span>
+        <span class="user-name">User</span>
+        <span class="user-badge" style="display:none;">admin</span>
+      </button>
+      
+      <!-- User Menu Dropdown -->
+      <div class="user-menu-dropdown" id="userMenuDropdown" style="display:none;">
+        <div class="user-info">
+          <span class="user-avatar" id="userAvatar">👤</span>
+          <div class="user-details">
+            <div class="user-name" id="userName">Người dùng</div>
+            <div class="user-badge" id="userBadge" style="display:none;"></div>
+          </div>
+        </div>
+        <div class="menu-items">
+          <button onclick="openProfileModal()" class="menu-item">
+            <span>📝</span> Chỉnh sửa profile
+          </button>
+          <button onclick="logout()" class="menu-item">
+            <span>🚪</span> Đăng xuất
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- SHARE TÀI LIỆU TỔNG HỢP -->
+    <div class="card-box" id="tonghopBox">
+      <button class="comments-toggle" onclick="toggleComments('tonghop')">
+        💬 Bình luận & Cảm xúc
+      </button>
+      
+      <div class="section-title"><span class="icon">📚</span>Share tài liệu tổng hợp</div>
+      <div class="resource-tabs" id="resourceTabsTongHop"></div>
+      <button class="sheet-btn" id="showTongHopBtn" style="display:none;">Nhấn vào để xem Sheet tài liệu</button>
+      <div class="sheet-wrap" id="tongHopSheetWrap">
+        <iframe id="tongHopSheetIframe" src="" width="100%" height="670" frameborder="0" style="border:0;display:block;"></iframe>
+      </div>
+      <div class="sheet-message" id="sheetTongHopMessage" style="display:none;"></div>
+      
+      <!-- Comments Section for Tonghop -->
+      <div id="tonghopComments"></div>
+    </div>
+
+    <!-- SHARE KHÓA HỌC -->
+    <div class="card-box" id="khoahocBox">
+      <button class="comments-toggle" onclick="toggleComments('khoahoc')">
+        💬 Bình luận & Cảm xúc
+      </button>
+      
+      <div class="section-title"><span class="icon">🎓</span>Share khóa học full lộ trình theo lớp & môn</div>
+      <div class="class-tabs" id="classTabs"></div>
+      <div class="subject-tabs" id="subjectTabs"></div>
+      <button class="sheet-btn" id="showKhoaHocSheetBtn" style="display:none;">Nhấn vào để xem Sheet khóa học</button>
+      <div class="sheet-wrap" id="khoaHocSheetWrap">
+        <iframe id="khoaHocSheetIframe" src="" width="100%" height="670" frameborder="0" style="border:0;display:block;"></iframe>
+      </div>
+      <div class="sheet-message" id="sheetKhoaHocMessage" style="display:none;"></div>
+      
+      <!-- Comments Section for Khoahoc -->
+      <div id="khoahocComments"></div>
+    </div>
+
+    <div class="promo">
+      <span style="font-size:1.21em;font-weight:800;color:#222;">
+        <span style="font-size:1.18em;">🎓</span>
+        KHÓA HỌC XPS – LỚP 10, 11, 12 – CẤP TỐC, GIÁ RẺ
+      </span><br>
+      <span style="color:#1976d2;font-weight:600;">
+        Ưu đãi tháng này – Học trọn gói từ A–Z, chọn thầy cô theo gu của bạn!
+      </span><br>
+      <a style="font-weight:700;color:#1976d2;text-decoration:underline;" href="#">Combo Lớp 12 – dành cho 2K8:</a>
+      <ul>
+        <li>✅ <span class="ibzalo" id="hotlinePromo2" style="cursor:pointer"></span> nhé</li>
+        <li>📌 TẶNG kèm: Khóa học lớp 10 + 11 bản 2025</li>
+      </ul>
+      <a style="font-weight:700;color:#1976d2;text-decoration:underline;" href="#">Combo Lớp 11/10 – dành cho 2K9/2K10:</a>
+      <ul>
+        <li>✅ <span class="ibzalo" id="hotlinePromo3" style="cursor:pointer"></span> nhé</li>
+        <li>📌 Có cả tổ hợp: Toán, Văn, Anh, KHTN, KHXH</li>
+        <li>📌 TẶNG: Khóa học lớp 10 bản 2025</li>
+      </ul>
+      <p>
+        <span style="color:#1976d2;font-weight:800;text-decoration:underline;">
+          <span style="background:#e3f2fd;padding:1px 8px 1px 5px;border-radius:6px;">🆓 ĐƯỢC HỌC THỬ 24 GIỜ MIỄN PHÍ</span>
+        </span> trước khi đăng ký<br>
+        <span style="color:#1976d2;">♻️</span> Cập nhật bài giảng mới mỗi tuần, có file luyện đề, hệ thống ôn tập cuối kỳ
+        <br>
+        <span style="color:#9c27b0;font-weight:700;"><span style="font-size:1.13em;">💡</span> Đặc biệt:</span>
+      </p>
+      <ul>
+        <li>Khóa TOEIC cô Mai Phương: <span class="ibzalo" id="hotlinePromo4" style="cursor:pointer"></span> nhé</li>
+        <li>Khóa IELTS nền tảng – nâng band: <span class="ibzalo" id="hotlinePromo5" style="cursor:pointer"></span> nhé</li>
+        <li>Khóa sinh viên ôn lại gốc lớp 12: <span class="ibzalo" id="hotlinePromo6" style="cursor:pointer"></span> nhé</li>
+      </ul>
+      <span style="color:#e65100;font-weight:700;font-size:1.08em;">
+        <span style="font-size:1.15em;">⏳</span> Ưu đãi giới hạn trong tháng – nhanh tay đăng ký để không bỏ lỡ!
+      </span>
+    </div>
+  </div>
+
+  <!-- NÚT ZALO NỔI CHỈ CHỮ LIÊN HỆ -->
+  <div class="zalo-fab" id="zaloFab" title="Nhấn để liên hệ">
+    <span class="fab-label">Liên hệ</span>
+  </div>
+  <div class="zalo-chat-balloon" id="zaloBalloon">
+    Liên hệ
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-strong">Liên hệ:</span>
+      <a href="#" id="footerHotline" class="footer-link" target="_blank" rel="noopener"></a>
+      &bull;
+      <a href="https://www.tiktok.com/@khoahocgiasiure" class="footer-link" target="_blank" rel="noopener">TikTok @khoahocgiasiure</a>
+      &bull;
+      <a href="https://www.threads.net/@khoahocgiasiure" class="footer-link" target="_blank" rel="noopener">Threads @khoahocgiasiure</a>
+      <br>
+      <span style="color:#888;font-weight:400;display:block;margin-top:7px;">
+        &copy; 2025 <b style="color:#1976d2;font-weight:800">by MiniMax Agent</b> &mdash; Website với tài khoản và bình luận.
+      </span>
+    </div>
+  </footer>
+
+  <!-- Include Auth Modal -->
+  <div id="authModalContainer"></div>
+  
+  <!-- Include Profile Modal -->
+  <div id="profileModalContainer"></div>
+
+  <!-- Include Comments Components -->
+  <div id="commentsTemplateContainer"></div>
+
+  <script>
+    // Load external components
+    function loadComponent(url, containerId) {
+      return fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById(containerId).innerHTML = html;
+        })
+        .catch(error => console.error('Error loading component:', error));
+    }
+
+    // Load all components
+    Promise.all([
+      loadComponent('frontend/components/auth-modal.html', 'authModalContainer'),
+      loadComponent('frontend/components/comments.html', 'commentsTemplateContainer')
+    ]).then(() => {
+      // Load JavaScript files
+      const scripts = [
+        'frontend/js/auth.js',
+        'frontend/js/comments.js'
+      ];
+      
+      scripts.forEach(src => {
+        const script = document.createElement('script');
+        script.src = src;
+        document.head.appendChild(script);
+      });
+    });
+
+    // Toggle comments section
+    function toggleComments(sectionType) {
+      let sectionCategory, sectionSubject;
+      let containerId;
+      
+      if (sectionType === 'tonghop') {
+        sectionCategory = currentTongHop;
+        sectionSubject = null;
+        containerId = 'tonghopComments';
+      } else {
+        sectionCategory = currentKhoa;
+        sectionSubject = currentMon;
+        containerId = 'khoahocComments';
+      }
+      
+      const container = document.getElementById(containerId);
+      const toggleBtn = document.querySelector(`#${sectionType}Box .comments-toggle`);
+      
+      if (container.innerHTML === '') {
+        // Load comments component
+        fetch('frontend/components/comments.html')
+          .then(response => response.text())
+          .then(html => {
+            container.innerHTML = html;
+            
+            // Initialize comments system
+            if (typeof initCommentsSystem === 'function') {
+              initCommentsSystem(sectionType, sectionCategory, sectionSubject);
+            }
+            
+            toggleBtn.classList.add('active');
+          });
+      } else {
+        // Toggle visibility
+        const commentsSection = container.querySelector('.comments-section');
+        if (commentsSection.style.display === 'none') {
+          commentsSection.style.display = 'block';
+          toggleBtn.classList.add('active');
+          
+          // Reload comments if needed
+          if (typeof initCommentsSystem === 'function') {
+            initCommentsSystem(sectionType, sectionCategory, sectionSubject);
+          }
+        } else {
+          commentsSection.style.display = 'none';
+          toggleBtn.classList.remove('active');
+        }
+      }
+    }
+
+    // Original website JavaScript (modified)
+    function getCurrentHotlineObj() {
+      const now = new Date();
+      const hour = now.getHours();
+      if (hour >= 0 && hour < 2)
+        return { name: "Võ Như Linh", link: "https://zalo.me/0702739492" };
+      return { name: "FUS", link: "https://zalo.me/0788559492" };
+    }
+    
+    function setAllHotlines() {
+      const hotlineObj = getCurrentHotlineObj();
+      for (let i = 2; i <= 6; ++i) {
+        let el = document.getElementById('hotlinePromo'+i);
+        if(el) {
+          el.innerHTML = `Click vào đây để được tư vấn (zalo <b>${hotlineObj.name}</b>)`;
+          el.onclick = () => window.open(hotlineObj.link, '_blank');
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      setAllHotlines();
+      setInterval(setAllHotlines, 60*1000);
+
+      const adsModal = document.getElementById('adsModal');
+      const closeBtn = document.getElementById('adsModalClose');
+      if (closeBtn) {
+        closeBtn.onclick = function() {
+          adsModal.style.display = 'none';
+        };
+      }
+      
+      window.addEventListener('keydown', function(e) {
+        if (e.key === "Escape") adsModal.style.display = 'none';
+      });
+      adsModal.addEventListener('click', function(e) {
+        if (e.target === adsModal) adsModal.style.display = 'none';
+      });
+
+      try {
+        Object.keys(localStorage).forEach(function(key) {
+          if(key.startsWith('viewedSheet_') || key === 'viewedTongHopSheet') {
+            localStorage.removeItem(key);
+          }
+        });
+      } catch(e){}
+    });
+
+    // Exam countdown
+    const examDate = new Date("2025-06-26T07:45:00+07:00");
+    function updateExamCountdown() {
+      const now = new Date();
+      const diff = examDate - now;
+      let days = 0, hours = 0, minutes = 0, seconds = 0;
+      if (diff > 0) {
+        days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        minutes = Math.floor((diff / (1000 * 60)) % 60);
+        seconds = Math.floor((diff / 1000) % 60);
+      }
+      document.getElementById("countdown-day").textContent = days.toString().padStart(2, "0");
+      document.getElementById("countdown-hour").textContent = hours.toString().padStart(2, "0");
+      document.getElementById("countdown-minute").textContent = minutes.toString().padStart(2, "0");
+      document.getElementById("countdown-second").textContent = seconds.toString().padStart(2, "0");
+    }
+    setInterval(updateExamCountdown, 1000);
+    updateExamCountdown();
+
+    // Zalo FAB
+    const zaloFab = document.getElementById('zaloFab');
+    const zaloBalloon = document.getElementById('zaloBalloon');
+    let zaloBalloonTimer = null;
+    zaloFab.onclick = function() {
+      const hotlineObj = getCurrentHotlineObj();
+      window.open(hotlineObj.link, '_blank');
+    };
+    zaloFab.addEventListener('mouseenter', ()=>{
+      zaloBalloon.style.display = 'block';
+      clearTimeout(zaloBalloonTimer);
+      zaloBalloonTimer = setTimeout(()=>{zaloBalloon.style.display='none'}, 4200);
+    });
+    zaloFab.addEventListener('mouseleave', ()=> {
+      zaloBalloon.style.display = 'none';
+      clearTimeout(zaloBalloonTimer);
+    });
+    setTimeout(()=>{zaloBalloon.style.display='block'; zaloBalloonTimer = setTimeout(()=>{zaloBalloon.style.display='none'}, 4000);},1500);
+
+    // TỔNG HỢP
+    const TONGHOP_LIST = [
+      { label: "THPT", value: "thpt" },
+      { label: "Ngoại ngữ", value: "ngoaingu" }
+    ];
+    const TONGHOP_SHEET_CONFIG = {
+      thpt: {
+        shopee: "https://s.shopee.vn/6AZ9TBKYx7",
+        sheet: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkplYVN2YcSohk6RpGv1NmQW7GbFNQG4i5qfCwfaMTjZW0nB6kAw2zhLalTELh0zUeTS5lkh50MUtL/pubhtml?widget=true&amp;headers=false"
+      },
+      ngoaingu: {
+        shopee: "https://s.shopee.vn/6AZ9TBKYx7",
+        sheet: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8ZneB_QuJeYvEHXgDa-Suba9cOxaLFj1ZhhVDRV4FxrYdHSCqlg_7VSqIViaeSXAKix1tXDL2HAeJ/pubhtml?widget=true&amp;headers=false"
+      }
+    };
+    let currentTongHop = TONGHOP_LIST[0].value;
+
+    function renderResourceTabsTongHop() {
+      const tabs = document.getElementById("resourceTabsTongHop");
+      tabs.innerHTML = "";
+      TONGHOP_LIST.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "resource-tab" + (item.value === currentTongHop ? " active" : "");
+        btn.textContent = item.label;
+        btn.onclick = () => {
+          currentTongHop = item.value;
+          renderResourceTabsTongHop();
+          updateTongHopUI();
+          // Update comments if visible
+          const commentsSection = document.querySelector('#tonghopComments .comments-section');
+          if (commentsSection && commentsSection.style.display !== 'none') {
+            if (typeof initCommentsSystem === 'function') {
+              initCommentsSystem('tonghop', currentTongHop, null);
+            }
+          }
+        };
+        tabs.appendChild(btn);
+      });
+    }
+    
+    function updateTongHopUI() {
+      const cfg = TONGHOP_SHEET_CONFIG[currentTongHop];
+      const sheetBtn = document.getElementById("showTongHopBtn");
+      const sheetWrap = document.getElementById("tongHopSheetWrap");
+      const sheetIframe = document.getElementById("tongHopSheetIframe");
+      const msgBox = document.getElementById("sheetTongHopMessage");
+      sheetWrap.style.display = "none";
+      sheetIframe.src = "";
+      msgBox.style.display = "none";
+      if(cfg && cfg.sheet) {
+        if(cfg.sheet.trim()!=="") {
+          sheetBtn.style.display = "";
+          sheetBtn.textContent = "Nhấn vào để xem Sheet tài liệu";
+          sheetBtn.onclick = () => {
+            window.open(cfg.shopee, "_blank");
+            sheetBtn.style.display = "none";
+            sheetWrap.style.display = "block";
+            sheetIframe.src = cfg.sheet;
+          };
+        } else {
+          sheetBtn.style.display = "none";
+          msgBox.innerHTML = 'Chúng mình đang hoàn thiện, xin vui lòng đợi chờ.<br>Nếu muốn full file đầy đủ update liên tục hãy mua khóa học ở bên dưới ủng hộ bọn mình nhé!';
+          msgBox.style.display = "block";
+        }
+      } else {
+        sheetBtn.style.display = "none";
+        msgBox.innerHTML = 'Chúng mình đang hoàn thiện, xin vui lòng đợi chờ.<br>Nếu muốn full file đầy đủ update liên tục hãy mua khóa học ở bên dưới ủng hộ bọn mình nhé!';
+        msgBox.style.display = "block";
+      }
+    }
+    renderResourceTabsTongHop();
+    updateTongHopUI();
+
+    // SHARE KHÓA HỌC
+    const KHOA_LIST = [
+      { label:"Lớp 12", value:"12" },
+      { label:"Lớp 11", value:"11" },
+      { label:"Lớp 10", value:"10" }
+    ];
+    const MON_LIST = [
+      { label:"Toán", value:"toan" },
+      { label:"Lý", value:"ly" },
+      { label:"Hóa", value:"hoa" },
+      { label:"Sinh", value:"sinh" },
+      { label:"Sử", value:"su" },
+      { label:"Địa", value:"dia" },
+      { label:"GDCD", value:"gdcd" },
+      { label:"Tiếng Anh", value:"anh" },
+      { label:"Tin", value:"tin" }
+    ];
+    const KHOAHOC_CONFIG = {
+      "12": {
+        "toan": { shopee: "", sheet: "" },
+        "ly": { shopee: "", sheet: "" },
+        "hoa": { shopee: "", sheet: "" },
+        "sinh": { shopee: "", sheet: "" },
+        "su": { shopee: "", sheet: "" },
+        "dia": { shopee: "", sheet: "" },
+        "gdcd": { shopee: "", sheet: "" },
+        "anh": { shopee: "", sheet: "" },
+        "tin": { shopee: "", sheet: "" }
+      },
+      "11": {
+        "toan": { shopee: "https://s.shopee.vn/6AZ9TBKYx7", sheet: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKYEerDNEHvzPPcCiliC-Uj-57pAm6onChIXsb3IrmRU2VFm8Uj63y4PjStFX9HzTG9_FI1Gpx_ws/pubhtml?widget=true&amp;headers=false" },
+        "ly": { shopee: "", sheet: "" },
+        "hoa": { shopee: "", sheet: "" },
+        "sinh": { shopee: "", sheet: "" },
+        "su": { shopee: "", sheet: "" },
+        "dia": { shopee: "", sheet: "" },
+        "gdcd": { shopee: "", sheet: "" },
+        "anh": { shopee: "", sheet: "" },
+        "tin": { shopee: "", sheet: "" }
+      },
+      "10": {
+        "toan": { shopee: "", sheet: "" },
+        "ly": { shopee: "", sheet: "" },
+        "hoa": { shopee: "", sheet: "" },
+        "sinh": { shopee: "", sheet: "" },
+        "su": { shopee: "", sheet: "" },
+        "dia": { shopee: "", sheet: "" },
+        "gdcd": { shopee: "", sheet: "" },
+        "anh": { shopee: "", sheet: "" },
+        "tin": { shopee: "", sheet: "" }
+      }
+    };
+    let currentKhoa = KHOA_LIST[0].value;
+    let currentMon = MON_LIST[0].value;
+
+    function renderClassTabs() {
+      const tabs = document.getElementById("classTabs");
+      tabs.innerHTML = "";
+      KHOA_LIST.forEach(k => {
+        const btn = document.createElement("button");
+        btn.className = "class-tab" + (k.value === currentKhoa ? " active" : "");
+        btn.textContent = k.label;
+        btn.onclick = () => {
+          currentKhoa = k.value; 
+          currentMon = MON_LIST[0].value;
+          renderClassTabs(); 
+          renderSubjectTabs(); 
+          updateKhoaHocUI();
+          // Update comments if visible
+          const commentsSection = document.querySelector('#khoahocComments .comments-section');
+          if (commentsSection && commentsSection.style.display !== 'none') {
+            if (typeof initCommentsSystem === 'function') {
+              initCommentsSystem('khoahoc', currentKhoa, currentMon);
+            }
+          }
+        };
+        tabs.appendChild(btn);
+      });
+    }
+    
+    function renderSubjectTabs() {
+      const tabs = document.getElementById("subjectTabs");
+      tabs.innerHTML = "";
+      MON_LIST.forEach(m => {
+        const btn = document.createElement("button");
+        btn.className = "subject-tab" + (m.value === currentMon ? " active" : "");
+        btn.textContent = m.label;
+        btn.onclick = () => { 
+          currentMon = m.value; 
+          renderSubjectTabs(); 
+          updateKhoaHocUI();
+          // Update comments if visible
+          const commentsSection = document.querySelector('#khoahocComments .comments-section');
+          if (commentsSection && commentsSection.style.display !== 'none') {
+            if (typeof initCommentsSystem === 'function') {
+              initCommentsSystem('khoahoc', currentKhoa, currentMon);
+            }
+          }
+        }
+        tabs.appendChild(btn);
+      });
+    }
+    
+    function updateKhoaHocUI() {
+      const cfg = KHOAHOC_CONFIG[currentKhoa][currentMon];
+      const sheetBtn = document.getElementById("showKhoaHocSheetBtn");
+      const sheetWrap = document.getElementById("khoaHocSheetWrap");
+      const sheetIframe = document.getElementById("khoaHocSheetIframe");
+      const msgBox = document.getElementById("sheetKhoaHocMessage");
+      sheetWrap.style.display = "none";
+      sheetIframe.src = "";
+      msgBox.style.display = "none";
+      if(cfg && cfg.sheet) {
+        if(cfg.sheet.trim()!=="") {
+          sheetBtn.style.display = "";
+          sheetBtn.textContent = "Nhấn vào để xem Sheet khóa học";
+          sheetBtn.onclick = () => {
+            window.open(cfg.shopee, "_blank");
+            sheetBtn.style.display = "none";
+            sheetWrap.style.display = "block";
+            sheetIframe.src = cfg.sheet;
+          };
+        } else {
+          sheetBtn.style.display = "none";
+          msgBox.innerHTML = 'Chúng mình đang hoàn thiện, xin vui lòng đợi chờ.<br>Nếu muốn full file đầy đủ update liên tục hãy mua khóa học ở bên dưới ủng hộ bọn mình nhé!';
+          msgBox.style.display = "block";
+        }
+      } else {
+        sheetBtn.style.display = "none";
+        msgBox.innerHTML = 'Chúng mình đang hoàn thiện, xin vui lòng đợi chờ.<br>Nếu muốn full file đầy đủ update liên tục hãy mua khóa học ở bên dưới ủng hộ bọn mình nhé!';
+        msgBox.style.display = "block";
+      }
+    }
+
+    renderClassTabs();
+    renderSubjectTabs();
+    updateKhoaHocUI();
+  </script>
+</body>
+</html>
